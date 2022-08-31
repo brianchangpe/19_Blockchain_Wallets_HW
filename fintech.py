@@ -1,78 +1,18 @@
 # Cryptocurrency Wallet
 
-################################################################################
-# For this Challenge, you will assume the perspective of a Fintech Finder
-# customer in order to do the following:
 
-# * Generate a new Ethereum account instance by using your mnemonic seed phrase
-# (which you created earlier in the module).
-
-# * Fetch and display the account balance associated with your Ethereum account
-# address.
-
-# * Calculate the total value of an Ethereum transaction, including the gas
-# estimate, that pays a Fintech Finder candidate for their work.
-
-# * Digitally sign a transaction that pays a Fintech Finder candidate, and send
-# this transaction to the Ganache blockchain.
-
-# * Review the transaction hash code associated with the validated blockchain transaction.
-
-# Once you receive the transaction’s hash code, you will navigate to the Transactions
-# section of Ganache to review the blockchain transaction details. To confirm that 
-# you have successfully created the transaction, you will save screenshots to the 
-# README.md file of your GitHub repository for this Challenge assignment.
-
-################################################################################
-# Imports'
+# Imports
 from os import access
 import streamlit as st
 from dataclasses import dataclass
 from typing import Any, List
 from web3 import Web3
 w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:7545'))
+#from streamlit_lottie import st_lottie
+from PIL import Image
 
 ################################################################################
 # Step 1:
-# Import Ethereum Transaction Functions into the Fintech Finder Application
-
-# In this section, you'll import several functions from the `crypto_wallet.py`
-# script into the file `fintech_finder.py`, which contains code for Fintech
-# Finder’s customer interface, in order to add wallet operations to the
-# application. For this section, you will assume the perspective of a Fintech
-# Finder customer (i.e., you’ll provide your Ethereum wallet and account
-# information to the application).
-
-# Complete the following steps:
-
-# 1. Review the code contained in the `crypto_wallet.py` script file. Note that
-# the Ethereum transaction functions that you have built throughout this
-# module-including `wallet`, `wallet.derive_acount`, `get_balance`, `fromWei`,
-# `estimateGas`, `sendRawTransaction`, and others&mdash;have now been
-# incorporated into Python functions that allow you to automate the process of
-# accessing them.
-
-# 2. Add your mnemonic seed phrase (provided by Ganache) to the starter code’s `SAMPLE.env` file.
-# When the information has been added, rename the file `.env`.
-
-# 3. Import the following functions from the `crypto_wallet.py` file:
-# * `generate_account`
-# * `get_balance`
-# * `send_transaction`
-
-# 4. Within the Streamlit sidebar section of code, create a variable named
-# `account`. Set this variable equal to a call on the `generate_account`
-# function. This function will create the Fintech Finder customer’s (in this
-# case, your) HD wallet and Ethereum account.
-
-# 5. Within this same section of the `fintech_finder.py` file, define a
-# new `st.sidebar.write` function that will display the balance of the
-# customer’s account. Inside this function, call the `get_balance` function
-# and pass it your Ethereum `account.address`.
-
-
-################################################################################
-# Step 1 - Part 3:
 # Import the following functions from the `crypto_wallet.py` file:
 # * `generate_account`
 # * `get_balance`
@@ -81,9 +21,8 @@ w3 = Web3(Web3.HTTPProvider('HTTP://127.0.0.1:7545'))
 # @TODO:
 # From `crypto_wallet.py import the functions generate_account, get_balance,
 #  and send_transaction
-# YOUR CODE HERE
-from crypto_wallet import generate_account, get_balance, send_transaction
-#I guess I could have also used generate_account, get_balance, send_transaction in lieu of the '*'
+
+from crypto_wallet import *
 
 ################################################################################
 # Fintech Finder Candidate Information
@@ -91,10 +30,10 @@ from crypto_wallet import generate_account, get_balance, send_transaction
 # Database of Fintech Finder candidates including their name, digital address, rating and hourly cost per Ether.
 # A single Ether is currently valued at $1,500
 candidate_database = {
-    "Lane": ["Lane", "0xaC8eB8B2ed5C4a0fC41a84Ee4950F417f67029F0", "4.3", .20, "Images/lane.jpeg"],
-    "Ash": ["Ash", "0x2422858F9C4480c2724A309D58Ffd7Ac8bF65396", "5.0", .33, "Images/ash.jpeg"],
-    "Jo": ["Jo", "0x8fD00f170FDf3772C5ebdCD90bF257316c69BA45", "4.7", .19, "Images/jo.jpeg"],
-    "Kendall": ["Kendall", "0x8fD00f170FDf3772C5ebdCD90bF257316c69BA45", "4.1", .16, "Images/kendall.jpeg"]
+    "Lane": ["Lane", "0x8B91Bb3e1450450405c4990F7a3A714b794577Ca", "4.3", .20, "Images/lane.jpeg"],
+    "Ash": ["Ash", "0xda79C2E3a9dDFc7F2A2b11dbb724D160e099C7E1", "5.0", .33, "Images/ash.jpeg"],
+    "Jo": ["Jo", "0xAB24f2cE0a0bb284873b465296992716b71c9F36", "4.7", .19, "Images/jo.jpeg"],
+    "Kendall": ["Kendall", "0xF7fc38247B530f0D8f67b9d069b215e9bF57f92f", "4.1", .16, "Images/kendall.jpeg"]
 }
 
 # A list of the FinTech Finder candidates first names
@@ -115,10 +54,22 @@ def get_people():
 
 ################################################################################
 # Streamlit Code
+def load_lottie_url(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
 
 # Streamlit application headings
 st.markdown("# Fintech Finder!")
+trn_img = load_lottie_url("https://assets4.lottiefiles.com/packages/lf20_xc3v8aec.json")
+with st.container():
+    left_column, right_column = st.columns(2)
+    #with left_column:
+        #st_lottie(trn_img, height = 300, key="stealing")
+
 st.markdown("## Hire A Fintech Professional!")
+st.write("---")
 st.text(" \n")
 
 ################################################################################
@@ -127,14 +78,13 @@ st.text(" \n")
 st.sidebar.markdown("## Client Account Address and Ethernet Balance in Ether")
 
 ##########################################
-# Step 1 - Part 4:
+# Step 1.1:
 # Create a variable named `account`. Set this variable equal to a call on the
 # `generate_account` function. This function will create the Fintech Finder
 # customer’s (in this case, your) HD wallet and Ethereum account.
 
 # @TODO:
 #  Call the `generate_account` function and save it as the variable `account`
-# YOUR CODE HERE
 account = generate_account()
 
 ##########################################
@@ -143,16 +93,20 @@ account = generate_account()
 st.sidebar.write(account.address)
 
 ##########################################
-# Step 1 - Part 5:
+# Step 1.2:
 # Define a new `st.sidebar.write` function that will display the balance of the
 # customer’s account. Inside this function, call the `get_balance` function and
 #  pass it your Ethereum `account.address`.
+#ether = get_balance(account.address)
 
 # @TODO
 # Call `get_balance` function and pass it your account address
 # Write the returned ether balance to the sidebar
-# YOUR CODE HERE
-st.sidebar.write(get_balance(account.address))
+
+ether = get_balance(w3, account.address)
+st.sidebar.markdown("## Your Balance of Ether")
+st.sidebar.markdown(ether)
+st.sidebar.markdown("---------")
 
 ##########################################
 
@@ -174,7 +128,7 @@ st.sidebar.write(candidate)
 hourly_rate = candidate_database[person][3]
 
 # Write the inTech Finder candidate's hourly rate to the sidebar
-st.sidebar.write(hourly_rate)
+st.sidebar.write("Hourly Rate:", hourly_rate)
 
 # Identify the FinTech Finder candidate's Ethereum Address
 candidate_address = candidate_database[person][1]
@@ -243,13 +197,11 @@ st.sidebar.markdown("## Total Wage in Ether")
 # Calculate total `wage` for the candidate by multiplying the candidate’s hourly
 # rate from the candidate database (`candidate_database[person][3]`) by the
 # value of the `hours` variable
-# YOUR CODE HERE
 wage = hourly_rate * hours
 
 # @TODO
 # Write the `wage` calculation to the Streamlit sidebar
-# YOUR CODE HERE
-st.sidebar.write(wage)
+st.sidebar.write((wage))
 
 ##########################################
 # Step 2 - Part 2:
@@ -276,7 +228,6 @@ if st.sidebar.button("Send Transaction"):
     # Call the `send_transaction` function and pass it 3 parameters:
     # Your `account`, the `candidate_address`, and the `wage` as parameters
     # Save the returned transaction hash as a variable named `transaction_hash`
-    # YOUR CODE HERE
     transaction_hash = send_transaction(w3, account, candidate_address, wage)
 
     # Markdown for the transaction hash
@@ -286,7 +237,7 @@ if st.sidebar.button("Send Transaction"):
     st.sidebar.write(transaction_hash)
 
     # Celebrate your successful payment
-    st.balloons()
+    st.success('Transaction Completed!')
 
 # The function that starts the Streamlit application
 # Writes FinTech Finder candidates to the Streamlit page
